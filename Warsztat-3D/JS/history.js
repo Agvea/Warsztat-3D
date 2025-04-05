@@ -32,3 +32,39 @@ async function findRepairByRegistration(rejestracja) {
   });
 }
 
+// Wyszukiwanie napraw przez klienta
+import { db } from "./firebase-config.js";
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+const form = document.getElementById("searchForm");
+const resultsDiv = document.getElementById("results");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const plate = form.plate.value.trim().toUpperCase();
+  const phone = form.phone.value.trim();
+
+  let q = query(collection(db, "repairs"), where("plate", "==", plate));
+  const snapshot = await getDocs(q);
+
+  let found = false;
+  resultsDiv.innerHTML = "";
+
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+    if (!phone || data.phone === phone) {
+      found = true;
+      resultsDiv.innerHTML += `
+        <div>
+          <h3>Data naprawy: ${data.date}</h3>
+          <p>${data.description}</p>
+        </div>
+      `;
+    }
+  });
+
+  if (!found) {
+    resultsDiv.innerHTML = "<p>Brak wyników dla podanych danych.</p>";
+  }
+});
+
