@@ -27,4 +27,4 @@ async function znajdzNaprawe(rejestracja) {
   if (!found) {
     resultsDiv.innerHTML = "<p>Brak wyników dla podanych danych.</p>";
   }
-});
+);
