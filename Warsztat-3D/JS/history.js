@@ -22,9 +22,9 @@ import { getFirestore, collection, query, where, getDocs } from "firebase/firest
 
 const db = getFirestore();
 
-async function findRepairByRegistration(registration) {
+async function findRepairByRegistration(rejestracja) {
   const repairsRef = collection(db, "repairs");
-  const q = query(repairsRef, where("registration", "==", registration));
+  const q = query(repairsRef, where("rejestracja", "==", rejestracja));
   const querySnapshot = await getDocs(q);
 
   querySnapshot.forEach((doc) => {
