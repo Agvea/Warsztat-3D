@@ -17,3 +17,18 @@ document.getElementById("repair-form").addEventListener("submit", function(e) {
     alert("Musisz być zalogowany.");
   }
 });
+
+import { getFirestore, collection, query, where, getDocs } from "firebase/firestore";
+
+const db = getFirestore();
+
+async function findRepairByRegistration(registration) {
+  const repairsRef = collection(db, "repairs");
+  const q = query(repairsRef, where("registration", "==", registration));
+  const querySnapshot = await getDocs(q);
+
+  querySnapshot.forEach((doc) => {
+    console.log(doc.id, " => ", doc.data());
+  });
+}
+
