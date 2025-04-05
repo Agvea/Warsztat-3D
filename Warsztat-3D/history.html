@@ -1,18 +1,12 @@
 <!DOCTYPE html>
 <html lang="pl">
   <head>
-    <meta charset="UTF=8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.1"> 
-    <title>Historia Napraw</title>
-    
-    <!-- Firebase App (core) -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js"></script>
-    <!-- Firebase Auth -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js"></script>
-    <!-- Firebase Realtime Database -->
-    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js"></script>
+    <meta charset="UTF-8" />
+    <title>Sprawdź historię napraw</title>
+    <script type="module" src="/js/firebase-config.js"></script>
+    <script type="module" src="/js/searchRepair.js"></script>
   </head>
-  
+
   <body>
       <nav>
         <ul>
@@ -24,11 +18,17 @@
         </ul>
       </nav>
     
-      <form id="repair-history-form">
-        <input type="text" id="car" placeholder="Rejestracja pojazdu">
-        <input type="text" id="repair" placeholder="Naprawa">
-        <button type="submit">Zapisz naprawę</button>
+      <form id="searchForm">
+        <label for="plate">Numer rejestracyjny pojazdu:</label>
+        <input type="text" id="plate" name="plate" required />
+
+        <label for="phone">Telefon:</label>
+        <input type="text" id="phone" name="phone" />
+
+        <button type="submit">Szukaj</button>
       </form>
+
+      <div id="results"></div>
     
-    </body>
+   </body>
 </html>
