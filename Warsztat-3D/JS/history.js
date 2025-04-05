@@ -1,5 +1,4 @@
 // Wyszukiwanie napraw przez klienta
-// history.js
 import { db } from "./firebase-config.js";
 import {
   collection,
@@ -9,7 +8,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 async function znajdzNaprawe(rejestracja) {
-  const naprawyRef = collection(db, "repairs");
+  const naprawyRef = collection(db, "repairs"); // <-- tu musi być `db`, nie undefined
   const q = query(naprawyRef, where("rejestracja", "==", rejestracja));
   const querySnapshot = await getDocs(q);
 
@@ -22,8 +21,3 @@ async function znajdzNaprawe(rejestracja) {
     console.log(doc.id, " => ", doc.data());
   });
 }
-
-
-  if (!found) {
-    resultsDiv.innerHTML = "<p>Brak wyników dla podanych danych.</p>";
-  };
