@@ -33,6 +33,7 @@ async function findRepairByRegistration(rejestracja) {
 }
 
 // Wyszukiwanie napraw przez klienta
+// js/searchRepair.js
 import { db } from "./firebase-config.js";
 import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 
@@ -41,10 +42,11 @@ const resultsDiv = document.getElementById("results");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const plate = form.plate.value.trim().toUpperCase();
-  const phone = form.phone.value.trim();
+  const rejestracja = form.plate.value.trim().toUpperCase();
+  const telefon = form.phone.value.trim();
 
-  let q = query(collection(db, "repairs"), where("plate", "==", plate));
+  // Tworzymy zapytanie po polu "rejestracja"
+  let q = query(collection(db, "repairs"), where("rejestracja", "==", rejestracja));
   const snapshot = await getDocs(q);
 
   let found = false;
@@ -52,12 +54,15 @@ form.addEventListener("submit", async (e) => {
 
   snapshot.forEach((doc) => {
     const data = doc.data();
-    if (!phone || data.phone === phone) {
+    
+    // Jeśli telefon nie został podany albo pasuje do tego w bazie, pokaż wynik
+    if (!telefon || data.telefon == telefon) {
       found = true;
+      const date = data.data?.toDate().toLocaleDateString("pl-PL") ?? "Brak daty";
       resultsDiv.innerHTML += `
         <div>
-          <h3>Data naprawy: ${data.date}</h3>
-          <p>${data.description}</p>
+          <h3>Data naprawy: ${date}</h3>
+          <p>Opis: ${data.opis}</p>
         </div>
       `;
     }
@@ -67,4 +72,3 @@ form.addEventListener("submit", async (e) => {
     resultsDiv.innerHTML = "<p>Brak wyników dla podanych danych.</p>";
   }
 });
-
