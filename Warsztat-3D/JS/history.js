@@ -8,7 +8,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 async function znajdzNaprawe(rejestracja) {
-  const naprawyRef = collection(db, "repairs"); // <-- tu musi być `db`, nie undefined
+  const naprawyRef = collection(db, "repairs");
   const q = query(naprawyRef, where("rejestracja", "==", rejestracja));
   const querySnapshot = await getDocs(q);
 
