@@ -1,23 +1,21 @@
 // Wyszukiwanie napraw przez klienta
-import { db } from "./firebase-config.js";
-import {
-  collection,
-  query,
-  where,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
 async function znajdzNaprawe(rejestracja) {
   const naprawyRef = collection(db, "repairs");
   const q = query(naprawyRef, where("rejestracja", "==", rejestracja));
+
   const querySnapshot = await getDocs(q);
 
   if (querySnapshot.empty) {
     console.log("Brak wyników");
+    document.getElementById("repair-list").innerHTML = "<li>Brak napraw dla tej rejestracji</li>";
     return;
   }
 
+  let resultList = "";
   querySnapshot.forEach((doc) => {
-    console.log(doc.id, " => ", doc.data());
+    resultList += `<li>Naprawa: ${doc.data().opis}, Telefon: ${doc.data().telefon}</li>`;
   });
+
+  document.getElementById("repair-list").innerHTML = resultList;
 }
+
