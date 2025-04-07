@@ -19,9 +19,10 @@ const firebaseConfig = {
   measurementId: "G-2X1Z66HYJJ"
 };
 
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
 
 export { db };
