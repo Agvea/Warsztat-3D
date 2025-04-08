@@ -1,45 +1,37 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { db } from './firebase-config.js';
+import { collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-// Twoja konfiguracja Firebase:
-const firebaseConfig = {
-  // ...wklej swoje dane
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// 🔍 Wyszukiwanie napraw
-async function znajdzNaprawe(rejestracja) {
-  const naprawyRef = collection(db, "repairs");
-  const q = query(naprawyRef, where("rejestracja", "==", rejestracja));
-
-  const querySnapshot = await getDocs(q);
-
-  if (querySnapshot.empty) {
-    console.log("Brak wyników");
-    document.getElementById("repair-list").innerHTML = "<li>Brak napraw dla tej rejestracji</li>";
-    return;
-  }
-
-  let resultList = "";
-  querySnapshot.forEach((doc) => {
-    const data = doc.data();
-    const date = data.data?.toDate().toLocaleDateString("pl-PL") || "brak daty";
-    resultList += `<li>${date}: ${data.opis} (tel. ${data.telefon})</li>`;
-  });
-
-  document.getElementById("repair-list").innerHTML = resultList;
-}
-
-// 🧾 Obsługa formularza
-document.getElementById("searchForm").addEventListener("submit", function(e) {
+document.getElementById('searchForm').addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  const plateInput = document.getElementById("plate").value.trim().toUpperCase();
+  const plate = document.getElementById('plate').value.trim().toUpperCase();
+  const phone = document.getElementById('phone').value.trim();
 
-  if (plateInput) {
-    znajdzNaprawe(plateInput);
+  if (!plate) return;
+
+  const repairsRef = collection(db, "repairs");
+  const q = query(repairsRef, where("rejestracja", "==", plate));
+
+  try {
+    const querySnapshot = await getDocs(q);
+    const resultsEl = document.getElementById("repair-list");
+    resultsEl.innerHTML = "";
+
+    if (querySnapshot.empty) {
+      resultsEl.innerHTML = "<li>Brak napraw dla podanej rejestracji.</li>";
+      return;
+    }
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const matchesPhone = phone ? data.telefon.toString() === phone : true;
+
+      if (matchesPhone) {
+        resultsEl.innerHTML += `<li>${data.opis} (${data.telefon})</li>`;
+      }
+    });
+  } catch (error) {
+    console.error("Błąd podczas pobierania danych:", error);
   }
 });
 
