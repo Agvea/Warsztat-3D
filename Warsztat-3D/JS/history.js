@@ -27,7 +27,7 @@ document.getElementById('searchForm').addEventListener('submit', async (e) => {
       const matchesPhone = phone ? data.telefon.toString() === phone : true;
 
       if (matchesPhone) {
-        resultsEl.innerHTML += `<li>${pojazd.opis} ${data.opis} (${data.telefon})</li>`;
+        resultsEl.innerHTML += `<li>${data.pojazd} ${data.opis} (${data.telefon})</li>`;
       }
     });
   } catch (error) {
